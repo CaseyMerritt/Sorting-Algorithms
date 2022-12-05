@@ -1,2 +1,5 @@
-﻿  Algorithms.cpp
-  test.vcxproj -> C:\Users\casey\source\repos\test\Debug\test.exe
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(467,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (test.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Algorithms.cpp
+  CS3110_Project2.cpp
+  Generating Code...
+  test.vcxproj -> C:\Users\Casey\source\repos\CS3310-Project2\Sorting-Algorithms\Debug\CS3110_Project2.exe

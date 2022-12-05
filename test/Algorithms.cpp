@@ -8,7 +8,7 @@
 //should use mergesort uses bubble rn
 int selectKthOne(int arr[], int size, int k) {
 	mergeSort(arr, 0, size - 1);
-	print(arr, size);
+	//print(arr, size);
 
 	return arr[k];
 }
@@ -29,53 +29,48 @@ void mergeSort(int arr[], int const begin, int const end)
 //merge portion of mergesort
 void merge(int arr[], int const left, int const mid, int const right)
 {
-	int const subArrayOne = mid - left + 1;
-	int const subArrayTwo = right - mid;
+	int const arrOne = mid - left + 1;
+	int const arrTwo = right - mid;
 
-	// Create temp arrays
-	int *leftArray = new int[subArrayOne];
-	int	*rightArray = new int[subArrayTwo];
+	int* leftArr = new int[arrOne];
+	int* rightArr = new int[arrTwo];
 
-	// Copy data to temp arrays leftArray[] and rightArray[]
-	for (int i = 0; i < subArrayOne; i++) {
-		leftArray[i] = arr[left + i];
+	for (int i = 0; i < arrOne; i++) {
+		leftArr[i] = arr[left + i];
 	}
-	for (int j = 0; j < subArrayTwo; j++) {
-		rightArray[j] = arr[mid + 1 + j];
+	for (int j = 0; j < arrTwo; j++) {
+		rightArr[j] = arr[mid + 1 + j];
 	}
 
-	int indexOfSubArrayOne = 0; // Initial index of first sub-array
-	int	indexOfSubArrayTwo = 0; // Initial index of second sub-array
-	int indexOfMergedArray = left; // Initial index of merged array
+	int arrOneIndex = 0;
+	int	arrTwoIndex = 0;
+	int mergeIndex = left;
 
-	// Merge the temp arrays back into array[left..right]
-	while (indexOfSubArrayOne < subArrayOne && indexOfSubArrayTwo < subArrayTwo) {
-		if (leftArray[indexOfSubArrayOne] <= rightArray[indexOfSubArrayTwo]) {
-			arr[indexOfMergedArray] = leftArray[indexOfSubArrayOne];
-			indexOfSubArrayOne++;
+	while (arrOneIndex < arrOne && arrTwoIndex < arrTwo) {
+		if (leftArr[arrOneIndex] <= rightArr[arrTwoIndex]) {
+			arr[mergeIndex] = leftArr[arrOneIndex];
+			arrOneIndex++;
 		}
 		else {
-			arr[indexOfMergedArray] = rightArray[indexOfSubArrayTwo];
-			indexOfSubArrayTwo++;
+			arr[mergeIndex] = rightArr[arrTwoIndex];
+			arrTwoIndex++;
 		}
-		indexOfMergedArray++;
+		mergeIndex++;
 	}
-	// Copy the remaining elements of
-	// left[], if there are any
-	while (indexOfSubArrayOne < subArrayOne) {
-		arr[indexOfMergedArray]= leftArray[indexOfSubArrayOne];
-		indexOfSubArrayOne++;
-		indexOfMergedArray++;
+
+	while (arrOneIndex < arrOne) {
+		arr[mergeIndex]= leftArr[arrOneIndex];
+		arrOneIndex++;
+		mergeIndex++;
 	}
-	// Copy the remaining elements of
-	// right[], if there are any
-	while (indexOfSubArrayTwo < subArrayTwo) {
-		arr[indexOfMergedArray] = rightArray[indexOfSubArrayTwo];
-		indexOfSubArrayTwo++;
-		indexOfMergedArray++;
+
+	while (arrTwoIndex < arrTwo) {
+		arr[mergeIndex] = rightArr[arrTwoIndex];
+		arrTwoIndex++;
+		mergeIndex++;
 	}
-	delete[] leftArray;
-	delete[] rightArray;
+	delete[] leftArr;
+	delete[] rightArr;
 }
 
 /***************************************************/
@@ -83,7 +78,7 @@ void merge(int arr[], int const left, int const mid, int const right)
 //using quicksort iteratively
 int selectKthTwo(int arr[], int size, int k) {
 	quickSortIterative(arr, 0, size - 1);
-	print(arr, size);
+	//print(arr, size);
 
 	return arr[k];
 }
@@ -91,40 +86,31 @@ int selectKthTwo(int arr[], int size, int k) {
 //quicksort but iterative
 void quickSortIterative(int arr[], int low, int high)
 {
-	// Create an auxiliary stack
 	int* stack = new int[high - low + 1];
 
-	// initialize top of stack
 	int top = -1;
 
-	// push initial values of l and h to stack
 	stack[++top] = low;
 	stack[++top] = high;
 
-	// Keep popping from stack while is not empty
 	while (top >= 0) {
-		// Pop h and l
 		high = stack[top--];
 		low = stack[top--];
 
-		// Set pivot element at its correct position
-		// in sorted array
-		int pi = partition(arr, low, high);
+		int p = partition(arr, low, high);//uses same partition as others
 
-		// If there are elements on left side of pivot,
-		// then push left side to stack
-		if (pi - 1 > low) {
+		if (p - 1 > low) {
 			stack[++top] = low;
-			stack[++top] = pi - 1;
+			stack[++top] = p - 1;
 		}
 
-		// If there are elements on right side of pivot,
-		// then push right side to stack
-		if (pi + 1 < high) {
-			stack[++top] = pi + 1;
+		if (p + 1 < high) {
+			stack[++top] = p + 1;
 			stack[++top] = high;
 		}
 	}
+
+	delete[] stack;
 }
 
 /***************************************************/
@@ -132,7 +118,7 @@ void quickSortIterative(int arr[], int low, int high)
 //using quicksort recursively
 int selectKthThree(int arr[], int size, int k) {
 	quickSort(arr, 0, size - 1);
-	print(arr, size);
+	//print(arr, size);
 
 	return arr[k];
 }
@@ -141,14 +127,14 @@ int selectKthThree(int arr[], int size, int k) {
 void quickSort(int arr[], int low, int high)
 {
 	if (low < high) {
-		int pi = partition(arr, low, high);
+		int p = partition(arr, low, high);
 
-		quickSort(arr, low, pi - 1);
-		quickSort(arr, pi + 1, high);
+		quickSort(arr, low, p - 1);
+		quickSort(arr, p + 1, high);
 	}
 }
 
-//partition part of quicksort
+//partition part of quicksort used in others as well
 int partition(int arr[], int low, int high)
 {
 	int pivot = arr[high];
