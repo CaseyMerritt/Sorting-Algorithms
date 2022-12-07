@@ -1,9 +1,8 @@
-//
-//
-//
+//Author: Casey Merrit
+//CS3310 Design and Analysis of Algorithms
+//Project 2: Kth selection algorithms
 
 #include "Algorithms.h"
-#include <algorithm>
 #include <chrono>
 
 using namespace std;
@@ -21,6 +20,7 @@ int main()
 	populate(arr, size);
 	//print(arr, size);
 
+
 	cout << "Enter k: ";
 	int k = 0;
 	cin >> k;
@@ -29,11 +29,13 @@ int main()
 
 	auto begin = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < 10000; i++) {
-		//val = selectKthOne(arr, size, k);
+		val = selectKthOne(arr, size, k);
 
-		val = selectKthTwo(arr, size, k);
+		//val = selectKthTwo(arr, size, k);
 
 		//val = selectKthThree(arr, size, k);
+
+		//val = selectKthFour(arr, size, k);
 
 		populate(arr, size);
 	}

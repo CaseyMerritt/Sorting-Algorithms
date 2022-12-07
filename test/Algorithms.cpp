@@ -1,11 +1,12 @@
-//
-//
-//
+//Author: Casey Merrit
+//CS3310 Design and Analysis of Algorithms
+//Project 2: Kth selection algorithms
+
 #include "Algorithms.h"
 
 /***************************************************/
 
-//should use mergesort uses bubble rn
+//Uses mergesort
 int selectKthOne(int arr[], int size, int k) {
 	mergeSort(arr, 0, size - 1);
 	//print(arr, size);
@@ -42,33 +43,34 @@ void merge(int arr[], int const left, int const mid, int const right)
 		rightArr[j] = arr[mid + 1 + j];
 	}
 
-	int arrOneIndex = 0;
-	int	arrTwoIndex = 0;
-	int mergeIndex = left;
+	int IndexO = 0;
+	int	IndexT = 0;
+	int IndexM = left;
 
-	while (arrOneIndex < arrOne && arrTwoIndex < arrTwo) {
-		if (leftArr[arrOneIndex] <= rightArr[arrTwoIndex]) {
-			arr[mergeIndex] = leftArr[arrOneIndex];
-			arrOneIndex++;
+	while (IndexO < arrOne && IndexT < arrTwo) {
+		if (leftArr[IndexO] <= rightArr[IndexT]) {
+			arr[IndexM] = leftArr[IndexO];
+			IndexO++;
 		}
 		else {
-			arr[mergeIndex] = rightArr[arrTwoIndex];
-			arrTwoIndex++;
+			arr[IndexM] = rightArr[IndexT];
+			IndexT++;
 		}
-		mergeIndex++;
+		IndexM++;
 	}
 
-	while (arrOneIndex < arrOne) {
-		arr[mergeIndex]= leftArr[arrOneIndex];
-		arrOneIndex++;
-		mergeIndex++;
+	while (IndexO < arrOne) {
+		arr[IndexM]= leftArr[IndexO];
+		IndexO++;
+		IndexM++;
 	}
 
-	while (arrTwoIndex < arrTwo) {
-		arr[mergeIndex] = rightArr[arrTwoIndex];
-		arrTwoIndex++;
-		mergeIndex++;
+	while (IndexT < arrTwo) {
+		arr[IndexM] = rightArr[IndexT];
+		IndexT++;
+		IndexM++;
 	}
+
 	delete[] leftArr;
 	delete[] rightArr;
 }
@@ -137,11 +139,11 @@ void quickSort(int arr[], int low, int high)
 //partition part of quicksort used in others as well
 int partition(int arr[], int low, int high)
 {
-	int pivot = arr[high];
+	int p = arr[high];
 	int i = (low - 1);
 
 	for (int j = low; j <= high - 1; j++) {
-		if (arr[j] < pivot) {
+		if (arr[j] < p) {
 			i++;
 			int temp = arr[i];
 			arr[i] = arr[j];
@@ -159,7 +161,81 @@ int partition(int arr[], int low, int high)
 
 //using quicksort but with median of medians modification
 int selectKthFour(int arr[], int size, int k) {
-	return arr[k];
+	return quickSortMM(arr, 0, size - 1, k);
+}
+
+//partition part of quicksort but mm
+int partitionMM(int arr[], int low, int high, int x)
+{
+	int i;
+	for (i = low; i < high; i++) {
+		if (arr[i] == x) {
+			break;
+		}
+	}
+	int temp = arr[i];
+	arr[i] = arr[high];
+	arr[high] = temp;
+
+	i = low;
+	for (int j = low; j <= high - 1; j++)
+	{
+		if (arr[j] <= x)
+		{
+			temp = arr[i];
+			arr[i] = arr[high];
+			arr[i] = temp;
+			i++;
+		}
+	}
+	temp = arr[i];
+	arr[i] = arr[high];
+	arr[high] = temp;
+	return i;
+}
+
+//sort using MM
+int quickSortMM(int arr[], int low, int high, int k)
+{
+	if (k > 0 && k <= high - low + 1)
+	{
+		int n = high - low + 1;
+		int i;
+		int* median = new int[(n + 4) / 5];
+
+		for (i = 0; i < n / 5; i++) {
+			median[i] = findMedian(arr + low + i * 5, 5);
+		}
+
+		if (i * 5 < n)
+		{
+			median[i] = findMedian(arr + low + i * 5, n % 5);
+			i++;
+		}
+
+		// Find median of all medians using recursive call.
+		// If median[] has only one element, then no need
+		// of recursive call
+		int medOfMed = (i == 1) ? median[i - 1] : quickSortMM(median, 0, i - 1, i / 2);
+
+		delete[] median;
+
+		int pos = partitionMM(arr, low, high, medOfMed);
+
+		if ((pos - low) == (k - 1)) {
+			return arr[pos];
+		}
+		if ((pos - low) > (k - 1)) {
+			return quickSortMM(arr, low, pos - 1, k);
+		} 
+
+		return quickSortMM(arr, pos + 1, high, k - pos + low - 1);
+	}
+}
+
+int findMedian(int arr[], int n) {
+	sort(arr, arr + n);  // Sort the array uses a built in library sort algo
+	return arr[n / 2];
 }
 
 /***************************************************/
@@ -178,33 +254,6 @@ void print(int arr[], int size) {
 	}
 
 	cout << endl;
-}
-
-//basic sort
-int basicSort(int arr[], int size, int k) {
-	int smallestPos = 0;
-
-	for (int i = 0; i < size; i++) {
-		smallestPos = i;
-		for (int j = i; j < size; j++) {
-			if (arr[j] < arr[smallestPos]) {
-				smallestPos = j;
-			}
-		}
-
-		if (smallestPos != i) {
-			int temp = arr[i];
-			arr[i] = arr[smallestPos];
-			arr[smallestPos] = temp;
-		}
-
-		if (i + 1 == (size - 1)) {
-			break;
-		}
-	}
-
-	print(arr, size);
-	return arr[k];
 }
 
 /***************************************************/
